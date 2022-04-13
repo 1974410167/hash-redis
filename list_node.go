@@ -1,6 +1,6 @@
 package main
 
-import f "fmt"
+import "fmt"
 
 /*
 定义双向链表，并实现一系列操作双向链表的函数
@@ -60,7 +60,7 @@ func (node *ListNode) searchInListNode(key string) any {
 func (node *ListNode) printListNode() {
 	t := node
 	for t.next != nil {
-		f.Println(t.next.val)
+		fmt.Println(t.next.val)
 		t = t.next
 	}
 }

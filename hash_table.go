@@ -3,14 +3,14 @@ package main
 import f "fmt"
 
 type HashTable struct {
-	arr1       []*HashNode // 底层数组
+	arr        []*HashNode // 底层数组
 	LoadFactor float64     // 负载因子
 	cap        int         // 底层数组大小
 }
 
 // 得到目前哈希表中哈希键的总数量
 func (table *HashTable) getHashKeyTotal() int {
-	t := table.arr1
+	t := table.arr
 	total := 0
 	f.Println(t[0])
 	for i := 0; i < len(t); i++ {
