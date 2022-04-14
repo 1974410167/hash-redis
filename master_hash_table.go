@@ -38,7 +38,6 @@ func (m *MasterHashTable) Put(key string, val any) {
 }
 
 // 获得哈希表的节点和索引
-
 func (m *MasterHashTable) GetHashNode(key string, table *HashTable) (*HashNode, int64) {
 	index := m.getIndex(key, table.cap)
 	node := table.arr[index]
@@ -46,13 +45,11 @@ func (m *MasterHashTable) GetHashNode(key string, table *HashTable) (*HashNode, 
 }
 
 // 根据key从哈希表节点拿值
-
 func (m *MasterHashTable) GetValFromHashNode(key string) any {
 	if m.sign == true {
 		m.gradualHash()
 	}
 	// 不管何种情况都先到HashTable1中查找
-
 	curHashNode1, _ := m.GetHashNode(key, m.HashTable1)
 	if curHashNode1 != nil && curHashNode1.head.exist(key) {
 		return curHashNode1.head.searchInListNode(key)
@@ -70,7 +67,6 @@ func (m *MasterHashTable) GetValFromHashNode(key string) any {
 }
 
 // 向HashTable中Put一个键值对
-
 func (m *MasterHashTable) PutInHashTable(key string, val any, table *HashTable) {
 
 	curHashNode, index := m.GetHashNode(key, table)
@@ -100,6 +96,7 @@ func (m *MasterHashTable) PutInHashTable(key string, val any, table *HashTable) 
 	}
 }
 
+// 用于在渐进式hash期间，转移m.HashTable1中的键值对到m.HashTable2中
 func (m *MasterHashTable) gradualHash() {
 	if m.sign == false {
 		return
@@ -126,6 +123,7 @@ func (m *MasterHashTable) gradualHash() {
 
 }
 
+// rehash完毕，改变m.HashTable1的指向
 func (m *MasterHashTable) changeHashTable() {
 	m.HashTable1 = m.HashTable2
 	m.HashTable2 = nil
@@ -136,6 +134,7 @@ func (m *MasterHashTable) SetHashNode(index int64, node *HashNode, table *HashTa
 	table.arr[index] = node
 }
 
+// 通过此函数来每隔cap/10次操作计算一次负载因子，并由此判断是否扩容或者缩容
 func (m *MasterHashTable) handleThreshold() {
 	m.curThreshold += 1
 	// 是否需要判断负载因子

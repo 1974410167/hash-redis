@@ -5,9 +5,7 @@ import (
 )
 
 /*
-
 定义哈希表以及哈希表的节点以及实现操作哈希表的函数
-
 */
 
 type HashNode struct {
@@ -35,13 +33,11 @@ func (h *Hash) init() {
 	}
 }
 
-// Get 从哈希表拿值,
 func (h *Hash) Get(key string) any {
 	return h.Table.Get(key)
 
 }
 
-// Put 向哈希表中Put一个键值对，如果key存在则更新
 func (h *Hash) Put(key string, val any) {
 	h.Table.Put(key, val)
 }
