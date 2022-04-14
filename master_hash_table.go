@@ -57,7 +57,7 @@ func (m *MasterHashTable) GetValFromHashNode(key string) any {
 	if curHashNode1 != nil && curHashNode1.head.exist(key) {
 		return curHashNode1.head.searchInListNode(key)
 	}
-	// 处于渐进式哈希状态，继续从HashTable2中查找
+	// 处于渐进式哈希状态，并且没在HashTable1中找到，继续从HashTable2中查找
 	if m.sign == true {
 		curHashNode2, _ := m.GetHashNode(key, m.HashTable2)
 		if curHashNode1 == nil && curHashNode2 == nil {
@@ -109,6 +109,8 @@ func (m *MasterHashTable) gradualHash() {
 		m.sign = false
 		m.changeHashTable()
 		m.curThreshold = 0
+		m.counter = 0
+		m.threshold = m.cap / 10
 		return
 	}
 	hashNode := m.HashTable1.arr[m.counter]
@@ -127,6 +129,7 @@ func (m *MasterHashTable) gradualHash() {
 func (m *MasterHashTable) changeHashTable() {
 	m.HashTable1 = m.HashTable2
 	m.HashTable2 = nil
+	m.cap = m.HashTable1.cap
 }
 
 func (m *MasterHashTable) SetHashNode(index int64, node *HashNode, table *HashTable) {
@@ -154,7 +157,6 @@ func (m *MasterHashTable) handleThreshold() {
 				arr: newArr,
 				cap: n,
 			}
-			// 进入rehash状态
 			m.sign = true
 		}
 		m.curThreshold = 0
