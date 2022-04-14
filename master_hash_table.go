@@ -32,6 +32,8 @@ func (m *MasterHashTable) Put(key string, val any) {
 		m.PutInHashTable(key, val, m.HashTable1)
 	} else {
 		m.PutInHashTable(key, val, m.HashTable2)
+		m.gradualHash()
+
 	}
 }
 
@@ -50,6 +52,7 @@ func (m *MasterHashTable) GetValFromHashNode(key string) any {
 		m.gradualHash()
 	}
 	// 不管何种情况都先到HashTable1中查找
+
 	curHashNode1, _ := m.GetHashNode(key, m.HashTable1)
 	if curHashNode1 != nil && curHashNode1.head.exist(key) {
 		return curHashNode1.head.searchInListNode(key)
@@ -69,6 +72,7 @@ func (m *MasterHashTable) GetValFromHashNode(key string) any {
 // 向HashTable中Put一个键值对
 
 func (m *MasterHashTable) PutInHashTable(key string, val any, table *HashTable) {
+
 	curHashNode, index := m.GetHashNode(key, table)
 	newNode := &ListNode{
 		key: key,
@@ -88,7 +92,7 @@ func (m *MasterHashTable) PutInHashTable(key string, val any, table *HashTable) 
 	} else {
 		// 不存在链表中，插入
 		if !curHashNode.head.exist(key) {
-			curHashNode.head.insertInListNode(newNode)
+			curHashNode.tail.insertInListNode(newNode)
 		} else {
 			// key在链表里，更新
 			curHashNode.head.update(newNode)
@@ -101,20 +105,23 @@ func (m *MasterHashTable) gradualHash() {
 		return
 	}
 	// 渐进式哈希完毕
-	if m.counter >= m.HashTable2.cap {
+	if m.counter >= m.HashTable1.cap {
 		m.sign = false
 		m.changeHashTable()
 		m.curThreshold = 0
 		return
 	}
 	hashNode := m.HashTable1.arr[m.counter]
-	t := hashNode.head
-	for t.next != nil {
-		m.PutInHashTable(t.next.key, t.next.val, m.HashTable2)
-		t = t.next
+	if hashNode != nil {
+		t := hashNode.head
+		for t.next != nil {
+			m.PutInHashTable(t.next.key, t.next.val, m.HashTable2)
+			t = t.next
+		}
+		m.HashTable1.arr[m.counter] = nil
 	}
-	m.HashTable1.arr[m.counter] = nil
 	m.counter += 1
+
 }
 
 func (m *MasterHashTable) changeHashTable() {

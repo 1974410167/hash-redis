@@ -50,7 +50,7 @@ func main() {
 	hash := &Hash{}
 	hash.init()
 	hash.Put("age", 100)
-	hash.Put("name", "葛浩源")
+	hash.Put("name", "嘻嘻")
 	hash.Put("address", "东炉村")
 	hash.Put("gender", "男")
 	q1 := hash.Get("address")
@@ -58,7 +58,16 @@ func main() {
 	hash.Put("address", "啦啦啦")
 	q2 := hash.Get("address")
 	f.Println(q2)
-
 	q3 := hash.Get("age")
 	f.Println(q3)
+	for i := 0; i < 66688; i++ {
+		a := i
+		hash.Put(string(a), a*10)
+	}
+
+	qq := hash.Get(string(123))
+	f.Println(qq)
+	f.Println(hash.Get("name"))
+	f.Println(hash.Get("age"))
+
 }

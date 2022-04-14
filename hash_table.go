@@ -1,7 +1,5 @@
 package main
 
-import f "fmt"
-
 type HashTable struct {
 	arr        []*HashNode // 底层数组
 	LoadFactor float64     // 负载因子
@@ -12,12 +10,13 @@ type HashTable struct {
 func (table *HashTable) getHashKeyTotal() int {
 	t := table.arr
 	total := 0
-	f.Println(t[0])
-	for i := 0; i < len(t); i++ {
-		curHashNode := t[i].head
-		if curHashNode != nil {
-			q := curHashNode.listNodeLength()
-			total += q
+	for i := 0; i < table.cap; i++ {
+		if t[i] != nil {
+			curHashNode := t[i].head
+			if curHashNode != nil {
+				q := curHashNode.listNodeLength()
+				total += q
+			}
 		}
 	}
 	return total
